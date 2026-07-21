@@ -1,15 +1,16 @@
 import { prisma } from "../config/prisma";
+import { SignupDto } from "../types/auth.type";
 
-export class UserRepository {
-  async findByEmail(email: string) {
-    return prisma.user.findUnique({
-      where: { email },
-    });
-  }
+export const findByEmail = async (email: string) => {
+  return prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+};
 
-  async createUser(data: { name: string; email: string; password: string }) {
-    return prisma.user.create({
-      data,
-    });
-  }
-}
+export const createUser = async (data: SignupDto) => {
+  return prisma.user.create({
+    data,
+  });
+};

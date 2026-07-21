@@ -12,12 +12,31 @@ datasource db {
   url = env("DATABASE_URL")
 }
 
+enum ProductStatus {
+  AVAILABLE
+  ASSIGNED
+  MAINTENANCE
+  DAMAGED
+}
+
 
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   email     String   @unique
   password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  category  String
+  serial_no String @unique
+  qr_code String @unique
+  image_path String
+  status ProductStatus @default(AVAILABLE)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
