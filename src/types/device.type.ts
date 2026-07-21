@@ -12,5 +12,6 @@ export interface DeviceEntity {
   serial_no: string;
   qr_code: string;
   image_url: string;
+  qr_image_url: string;
   status?: DeviceStatus;
 }
