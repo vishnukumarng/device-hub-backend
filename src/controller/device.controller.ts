@@ -24,3 +24,38 @@ export const create = async (
     next(error);
   }
 };
+
+export const getdevice = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { qr_code } = req.query;
+
+    const device = await deviceService.getDevice(qr_code);
+
+    return successResponse(res, 200, "Device added successfully", device);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getalldevice = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const devices = await deviceService.getAllDevice();
+
+    return successResponse(
+      res,
+      200,
+      "Device detail fetched successfully",
+      devices,
+    );
+  } catch (error) {
+    next(error);
+  }
+};

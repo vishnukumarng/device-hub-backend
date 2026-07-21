@@ -28,3 +28,7 @@ export const createDevice = async (data: DeviceEntity) => {
     data,
   });
 };
+
+export const findAlldevice = async () => {
+  return prisma.device.findMany();
+};

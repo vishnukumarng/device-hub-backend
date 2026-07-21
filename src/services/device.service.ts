@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import * as deviceRepository from "../repositories/device.repositories";
 import { CreateDeviceRequest, DeviceEntity } from "../types/device.type";
-import { ConflictError } from "../utils/AppError";
+import { ConflictError, NotFoundError } from "../utils/AppError";
 import { generateQrSvg } from "../utils/qrcode.util";
 import { uploadSvgToCloudinary } from "../utils/cloudinaryUpload.util";
 
@@ -30,13 +30,37 @@ export const addDevice = async (data: CreateDeviceRequest) => {
   const device = await deviceRepository.createDevice(devicedata);
 
   return {
-    id: device.id,
     name: device.name,
     category: device.category,
-    serial_no: device.serial_no,
-    qr_code: device.qr_code,
     status: device.status,
     image_url: device.image_url,
     qr_image_url: device.qr_image_url,
+  };
+};
+
+export const getDevice = async (qrcode: string) => {
+  const device = await deviceRepository.findByQrCode(qrcode);
+
+  if (!device) {
+    throw new NotFoundError("Device Not Found");
+  }
+
+  return {
+    name: device.name,
+    category: device.category,
+    status: device.status,
+    image_url: device.image_url,
+  };
+};
+
+export const getAllDevice = async () => {
+  const devices = await deviceRepository.findAlldevice();
+
+  if (!devices) {
+    throw new NotFoundError("Device Not Found");
+  }
+
+  return {
+    list: devices,
   };
 };

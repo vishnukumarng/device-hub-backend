@@ -6,4 +6,8 @@ const router = Router();
 
 router.post("/create", verifyToken, deviceController.create);
 
+router.get("/get-device", deviceController.getdevice);
+
+router.get("/get-all-device", deviceController.getalldevice);
+
 export default router;
