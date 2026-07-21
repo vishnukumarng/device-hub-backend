@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.route";
-import productRoutes from "./routes/product.route";
+import deviceRoutes from "./routes/device.route";
+import checkoutRoutes from "./routes/checkout.route";
+import { errorHandler } from "./middlewares/error.middleware";
 
 const app = express();
 
@@ -9,15 +11,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/auth", authRoutes);
-app.use("/product", productRoutes);
 
-// base Route
+// Routes
+app.use("/auth", authRoutes);
+app.use("/device", deviceRoutes);
+app.use("/checkout", checkoutRoutes);
+
+// Base Route
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Device Hub API is running ",
+    message: "Device Hub API is running",
   });
 });
+
+// Centralized error handler (must be registered last)
+app.use(errorHandler);
 
 export default app;
