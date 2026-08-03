@@ -45,6 +45,8 @@ export const login = async (email: string, password: string) => {
   const token = jwt.sign(
     {
       email: existingUser.email,
+      id: existingUser.id,
+      role: existingUser.role,
     },
     process.env.SECRET_KEY as string,
     {

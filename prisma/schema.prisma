@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  admin
+  employee
+}
+
 enum DeviceStatus {
   AVAILABLE
   IN_USE
@@ -34,9 +39,11 @@ model User {
   name      String
   email     String     @unique
   password  String
+  role      UserRole @default(employee)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   checkouts Checkout[]
+  waitlist Waitlist[]
 }
 
 model Device {
@@ -51,6 +58,7 @@ model Device {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   checkouts    Checkout[]
+  waitlist Waitlist[]
 }
 
 model Checkout {
@@ -65,4 +73,25 @@ model Checkout {
   expectedReturnTime DateTime
   returnedAt         DateTime?
   createdAt          DateTime       @default(now())
+}
+
+enum WaitlistStatus {
+  PENDING     
+  NOTIFIED    
+  FULFILLED   
+  CANCELLED 
+}
+
+model Waitlist {
+  id         String         @id @default(auto()) @map("_id") @db.ObjectId
+  deviceId   String         @db.ObjectId
+  device     Device         @relation(fields: [deviceId], references: [id])
+  userId     String         @db.ObjectId
+  user       User           @relation(fields: [userId], references: [id])
+  status     WaitlistStatus @default(PENDING)
+  notifiedAt DateTime?
+  createdAt  DateTime       @default(now())
+
+  @@index([deviceId, status])
+  @@unique([deviceId, userId, status])
 }

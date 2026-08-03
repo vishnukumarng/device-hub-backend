@@ -3,7 +3,9 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface AuthRequest extends Request {
   user?: {
+    id: string;
     email: string;
+    role: "admin" | "employee";
   };
 }
 
@@ -30,7 +32,9 @@ export const verifyToken = (
     ) as JwtPayload;
 
     req.user = {
+      id: decoded.id,
       email: decoded.email,
+      role: decoded.role,
     };
 
     next();
@@ -40,4 +44,24 @@ export const verifyToken = (
       message: "Invalid or expired token.",
     });
   }
+};
+
+export const isAdmin = (...allowedRoles: Array<"admin" | "employee">) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Access denied. No token provided.",
+      });
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: "You do not have permission to perform this action.",
+      });
+    }
+
+    next();
+  };
 };
