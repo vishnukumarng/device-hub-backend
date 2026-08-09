@@ -4,7 +4,7 @@ import { verifyToken } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-router.post("/", verifyToken, waitlistController.join);
+router.post("/join", verifyToken, waitlistController.join);
 router.put("/cancel/:id", verifyToken, waitlistController.leave);
 router.get("/me", verifyToken, waitlistController.getMine);
 

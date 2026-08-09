@@ -46,10 +46,12 @@ export const getDevice = async (qrcode: string) => {
   }
 
   return {
+    id: device.id,
     name: device.name,
     category: device.category,
     status: device.status,
     image_url: device.image_url,
+    serialNumber: device.serial_no,
   };
 };
 
@@ -62,5 +64,21 @@ export const getAllDevice = async () => {
 
   return {
     list: devices,
+  };
+};
+
+export const fetchDevice = async (id: string) => {
+  const device = await deviceRepository.findById(id);
+
+  if (!device) {
+    throw new NotFoundError("Device Not Found");
+  }
+
+  return {
+    id: device.id,
+    name: device.name,
+    category: device.category,
+    status: device.status,
+    image_url: device.image_url,
   };
 };

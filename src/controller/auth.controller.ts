@@ -37,7 +37,7 @@ export const userdetail = async (req: AuthRequest, res: Response) => {
     const email = req.user?.email;
 
     if (!email) {
-      throw new Error("Token not found");
+      return errorResponse(res, 400, "Unauthorized");
     }
 
     const user = await userService.userdetail(email);

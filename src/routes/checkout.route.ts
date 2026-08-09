@@ -4,7 +4,7 @@ import { verifyToken } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-router.post("/", verifyToken, checkoutController.checkout);
+router.post("/book", verifyToken, checkoutController.checkout);
 router.post("/:id/return", verifyToken, checkoutController.returnDevice);
 router.get("/me", verifyToken, checkoutController.getMyCheckouts);
 
