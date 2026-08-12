@@ -33,7 +33,12 @@ export const checkout = async (
 
     const checkoutData = await checkoutService.checkoutDevice(email, dto);
 
-    return successResponse(res, 201, "Device checked out successfully", checkoutData);
+    return successResponse(
+      res,
+      201,
+      "Device checked out successfully",
+      checkoutData,
+    );
   } catch (error) {
     next(error);
   }
@@ -55,9 +60,17 @@ export const returnDevice = async (
       throw new BadRequestError("Checkout ID is required");
     }
 
-    const checkoutData = await checkoutService.returnDevice(email, id as string);
+    const checkoutData = await checkoutService.returnDevice(
+      email,
+      id as string,
+    );
 
-    return successResponse(res, 200, "Device returned successfully", checkoutData);
+    return successResponse(
+      res,
+      200,
+      "Device returned successfully",
+      checkoutData,
+    );
   } catch (error) {
     next(error);
   }
@@ -76,7 +89,12 @@ export const getMyCheckouts = async (
 
     const checkouts = await checkoutService.getMyCheckouts(email);
 
-    return successResponse(res, 200, "Active checkouts fetched successfully", checkouts);
+    return successResponse(
+      res,
+      200,
+      "Active checkouts fetched successfully",
+      checkouts,
+    );
   } catch (error) {
     next(error);
   }

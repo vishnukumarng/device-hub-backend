@@ -84,8 +84,23 @@ export const findMyActiveCheckouts = async (userId: string) => {
       userId,
       status: CheckoutStatus.ACTIVE,
     },
-    include: {
-      device: true,
+    select: {
+      id: true,
+      status: true,
+      startTime: true,
+      expectedReturnTime: true,
+      returnedAt: true,
+      device: {
+        select: {
+          id: true,
+          name: true,
+          category: true,
+          serial_no: true,
+          image_url: true,
+          status: true,
+        },
+      },
     },
+    orderBy: { startTime: "desc" },
   });
 };
