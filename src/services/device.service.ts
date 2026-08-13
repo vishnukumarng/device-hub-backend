@@ -50,8 +50,6 @@ export const getDevice = async (qrcode: string) => {
     name: device.name,
     category: device.category,
     status: device.status,
-    image_url: device.image_url,
-    serialNumber: device.serial_no,
   };
 };
 
@@ -79,6 +77,7 @@ export const fetchDevice = async (id: string) => {
     name: device.name,
     category: device.category,
     status: device.status,
-    image_url: device.image_url,
+    imageUrl: device.image_url,
+    serialNumber: device.serial_no,
   };
 };

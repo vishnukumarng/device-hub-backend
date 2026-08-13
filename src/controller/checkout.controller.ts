@@ -31,14 +31,9 @@ export const checkout = async (
       expectedReturnTime,
     };
 
-    const checkoutData = await checkoutService.checkoutDevice(email, dto);
+    await checkoutService.checkoutDevice(email, dto);
 
-    return successResponse(
-      res,
-      201,
-      "Device checked out successfully",
-      checkoutData,
-    );
+    return successResponse(res, 201, "Device checked out successfully");
   } catch (error) {
     next(error);
   }
