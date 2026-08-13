@@ -9,7 +9,10 @@ import { errorHandler } from "./middlewares/error.middleware";
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: "https://device-hub-frontend.vercel.app",
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
