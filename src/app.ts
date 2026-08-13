@@ -10,8 +10,7 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: "https://device-hub-frontend.vercel.app",
-  credentials: true,
+  origin: "*"
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
