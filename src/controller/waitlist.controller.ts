@@ -24,7 +24,7 @@ export const leave = async (
 ) => {
   try {
     const { id } = req.params;
-    const entry = await waitlistService.leaveWaitlist(id);
+    const entry = await waitlistService.leaveWaitlist(id as string);
 
     return successResponse(res, 200, "Removed from waitlist", entry);
   } catch (error) {

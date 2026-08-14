@@ -33,7 +33,7 @@ export const getdevice = async (
   try {
     const { qr_code } = req.query;
     console.log(qr_code);
-    const device = await deviceService.getDevice(qr_code);
+    const device = await deviceService.getDevice(qr_code as string);
 
     return successResponse(res, 200, "Device added successfully", device);
   } catch (error) {
@@ -68,7 +68,7 @@ export const getdeviceId = async (
   try {
     const { id } = req.params;
 
-    const device = await deviceService.fetchDevice(id);
+    const device = await deviceService.fetchDevice(id as string);
 
     return successResponse(res, 200, "Device added successfully", device);
   } catch (error) {

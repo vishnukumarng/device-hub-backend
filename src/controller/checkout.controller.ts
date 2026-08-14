@@ -94,3 +94,90 @@ export const getMyCheckouts = async (
     next(error);
   }
 };
+
+export const reserve = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const email = req.user?.email;
+    if (!email) {
+      throw new BadRequestError("User authentication details missing");
+    }
+
+    const { deviceId, startTime, expectedReturnTime } = req.body;
+    if (!deviceId) {
+      throw new BadRequestError("Device ID is required");
+    }
+    if (!startTime) {
+      throw new BadRequestError("Reservation start time is required");
+    }
+
+    const reservation = await checkoutService.reserveDevice(
+      email,
+      deviceId,
+      startTime,
+      expectedReturnTime,
+    );
+
+    return successResponse(res, 201, "Device reserved successfully", reservation);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelReservation = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const email = req.user?.email;
+    if (!email) {
+      throw new BadRequestError("User authentication details missing");
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      throw new BadRequestError("Reservation ID is required");
+    }
+
+    const checkoutData = await checkoutService.cancelReservation(email, id as string);
+
+    return successResponse(res, 200, "Reservation cancelled successfully", checkoutData);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const claimReservation = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const email = req.user?.email;
+    if (!email) {
+      throw new BadRequestError("User authentication details missing");
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      throw new BadRequestError("Reservation ID is required");
+    }
+
+    const { expectedReturnTime } = req.body;
+
+    const checkoutData = await checkoutService.claimReservation(
+      email,
+      id as string,
+      expectedReturnTime,
+    );
+
+    return successResponse(res, 200, "Reservation checked out successfully", checkoutData);
+  } catch (error) {
+    next(error);
+  }
+};
+

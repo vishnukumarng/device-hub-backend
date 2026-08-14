@@ -90,6 +90,7 @@ export const findMyActiveCheckouts = async (userId: string) => {
       startTime: true,
       expectedReturnTime: true,
       returnedAt: true,
+      type: true,
       device: {
         select: {
           id: true,
@@ -104,3 +105,88 @@ export const findMyActiveCheckouts = async (userId: string) => {
     orderBy: { startTime: "desc" },
   });
 };
+
+export const createReservation = async (
+  deviceId: string,
+  userId: string,
+  startTime: Date,
+  expectedReturnTime: Date,
+) => {
+  const updateResult = await prisma.device.updateMany({
+    where: {
+      id: deviceId,
+      status: DeviceStatus.AVAILABLE,
+    },
+    data: {
+      status: DeviceStatus.RESERVED,
+    },
+  });
+
+  if (updateResult.count === 0) {
+    return null;
+  }
+
+  try {
+    const checkout = await prisma.checkout.create({
+      data: {
+        deviceId,
+        userId,
+        type: CheckoutType.RESERVATION,
+        status: CheckoutStatus.ACTIVE,
+        startTime,
+        expectedReturnTime,
+      },
+    });
+    return checkout;
+  } catch (error) {
+    await revertDeviceStatus(deviceId);
+    throw error;
+  }
+};
+
+export const cancelReservation = async (checkoutId: string, deviceId: string) => {
+  return prisma.$transaction([
+    prisma.checkout.update({
+      where: { id: checkoutId },
+      data: { status: CheckoutStatus.CANCELLED },
+    }),
+    prisma.device.update({
+      where: { id: deviceId },
+      data: { status: DeviceStatus.AVAILABLE },
+    }),
+  ]);
+};
+
+export const claimReservation = async (
+  checkoutId: string,
+  deviceId: string,
+  userId: string,
+  expectedReturnTime: Date,
+) => {
+  return prisma.$transaction([
+    prisma.checkout.update({
+      where: { id: checkoutId },
+      data: {
+        status: CheckoutStatus.COMPLETED,
+        returnedAt: new Date(),
+      },
+    }),
+    prisma.checkout.create({
+      data: {
+        deviceId,
+        userId,
+        type: CheckoutType.CHECKOUT,
+        status: CheckoutStatus.ACTIVE,
+        startTime: new Date(),
+        expectedReturnTime,
+      },
+    }),
+    prisma.device.update({
+      where: { id: deviceId },
+      data: {
+        status: DeviceStatus.IN_USE,
+      },
+    }),
+  ]);
+};
+
