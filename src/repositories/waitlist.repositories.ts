@@ -41,3 +41,17 @@ export const findMyWaitlist = async (userId: string) => {
     orderBy: { createdAt: "desc" },
   });
 };
+
+export const fulfillUserWaitlist = async (deviceId: string, userId: string) => {
+  return prisma.waitlist.updateMany({
+    where: {
+      deviceId,
+      userId,
+      status: { in: ["PENDING", "NOTIFIED"] },
+    },
+    data: {
+      status: "FULFILLED",
+    },
+  });
+};
+

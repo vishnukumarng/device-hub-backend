@@ -37,7 +37,7 @@ export const getdevice = async (
       throw new BadRequestError("QR code must be a string");
     }
     console.log(qr_code);
-    const device = await deviceService.getDevice(qr_code);
+    const device = await deviceService.getDevice(qr_code as string);
 
     return successResponse(res, 200, "Device added successfully", device);
   } catch (error) {
@@ -75,7 +75,7 @@ export const getdeviceId = async (
       throw new BadRequestError("Device ID must be a string");
     }
 
-    const device = await deviceService.fetchDevice(id);
+    const device = await deviceService.fetchDevice(id as string);
 
     return successResponse(res, 200, "Device added successfully", device);
   } catch (error) {

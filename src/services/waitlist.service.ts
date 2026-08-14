@@ -51,3 +51,8 @@ export const notifyNextInLine = async (deviceId: string) => {
 
   return nextEntry;
 };
+
+export const fulfillWaitlist = async (deviceId: string, userId: string) => {
+  return waitlistRepository.fulfillUserWaitlist(deviceId, userId);
+};
+
