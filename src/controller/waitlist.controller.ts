@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as waitlistService from "../services/waitlist.service";
 import { successResponse } from "../utils/response";
 import { JoinWaitlistRequest } from "../types/waitlist.type";
+import { BadRequestError } from "../utils/AppError";
 
 export const join = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -24,7 +25,10 @@ export const leave = async (
 ) => {
   try {
     const { id } = req.params;
-    const entry = await waitlistService.leaveWaitlist(id as string);
+    if (typeof id !== "string") {
+      throw new BadRequestError("Waitlist entry ID must be a string");
+    }
+    const entry = await waitlistService.leaveWaitlist(id);
 
     return successResponse(res, 200, "Removed from waitlist", entry);
   } catch (error) {

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as deviceService from "../services/device.service";
 import { successResponse } from "../utils/response";
 import { CreateDeviceRequest } from "../types/device.type";
+import { BadRequestError } from "../utils/AppError";
 
 export const create = async (
   req: Request,
@@ -32,6 +33,9 @@ export const getdevice = async (
 ) => {
   try {
     const { qr_code } = req.query;
+    if (typeof qr_code !== "string") {
+      throw new BadRequestError("QR code must be a string");
+    }
     console.log(qr_code);
     const device = await deviceService.getDevice(qr_code as string);
 
@@ -67,6 +71,9 @@ export const getdeviceId = async (
 ) => {
   try {
     const { id } = req.params;
+    if (typeof id !== "string") {
+      throw new BadRequestError("Device ID must be a string");
+    }
 
     const device = await deviceService.fetchDevice(id as string);
 
