@@ -56,7 +56,7 @@ export const returnCheckout = async (checkoutId: string, deviceId: string) => {
     prisma.checkout.update({
       where: { id: checkoutId },
       data: {
-        status: CheckoutStatus.COMPLETED,
+        status: CheckoutStatus.RETURNED,
         returnedAt: new Date(),
       },
     }),
@@ -144,7 +144,10 @@ export const createReservation = async (
   }
 };
 
-export const cancelReservation = async (checkoutId: string, deviceId: string) => {
+export const cancelReservation = async (
+  checkoutId: string,
+  deviceId: string,
+) => {
   return prisma.$transaction([
     prisma.checkout.update({
       where: { id: checkoutId },
@@ -167,7 +170,7 @@ export const claimReservation = async (
     prisma.checkout.update({
       where: { id: checkoutId },
       data: {
-        status: CheckoutStatus.COMPLETED,
+        status: CheckoutStatus.RETURNED,
         returnedAt: new Date(),
       },
     }),
@@ -190,3 +193,21 @@ export const claimReservation = async (
   ]);
 };
 
+export const findById = async (id: string) => {
+  return prisma.checkout.findMany({
+    where: {
+      userId: id,
+      status: "RETURNED",
+    },
+    select: {
+      status: true,
+      returnedAt: true,
+      device: {
+        select: {
+          name: true,
+          category: true,
+        },
+      },
+    },
+  });
+};

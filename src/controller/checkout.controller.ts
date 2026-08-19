@@ -121,7 +121,12 @@ export const reserve = async (
       expectedReturnTime,
     );
 
-    return successResponse(res, 201, "Device reserved successfully", reservation);
+    return successResponse(
+      res,
+      201,
+      "Device reserved successfully",
+      reservation,
+    );
   } catch (error) {
     next(error);
   }
@@ -143,9 +148,17 @@ export const cancelReservation = async (
       throw new BadRequestError("Reservation ID is required");
     }
 
-    const checkoutData = await checkoutService.cancelReservation(email, id as string);
+    const checkoutData = await checkoutService.cancelReservation(
+      email,
+      id as string,
+    );
 
-    return successResponse(res, 200, "Reservation cancelled successfully", checkoutData);
+    return successResponse(
+      res,
+      200,
+      "Reservation cancelled successfully",
+      checkoutData,
+    );
   } catch (error) {
     next(error);
   }
@@ -175,9 +188,34 @@ export const claimReservation = async (
       expectedReturnTime,
     );
 
-    return successResponse(res, 200, "Reservation checked out successfully", checkoutData);
+    return successResponse(
+      res,
+      200,
+      "Reservation checked out successfully",
+      checkoutData,
+    );
   } catch (error) {
     next(error);
   }
 };
 
+export const getMyReturnList = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const email = req.user?.email;
+
+    const returnList = await checkoutService.returnHistory(email);
+
+    return successResponse(
+      res,
+      200,
+      "Returned History fetched Successfully",
+      returnList,
+    );
+  } catch (error) {
+    next(error);
+  }
+};

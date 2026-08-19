@@ -6,6 +6,6 @@ const router = Router();
 
 router.post("/join", verifyToken, waitlistController.join);
 router.put("/cancel/:id", verifyToken, waitlistController.leave);
-router.get("/me", verifyToken, waitlistController.getMine);
+router.get("/get-my-list", verifyToken, waitlistController.getMine);
 
 export default router;
