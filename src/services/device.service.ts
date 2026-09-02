@@ -72,12 +72,5 @@ export const fetchDevice = async (id: string) => {
     throw new NotFoundError("Device Not Found");
   }
 
-  return {
-    id: device.id,
-    name: device.name,
-    category: device.category,
-    status: device.status,
-    imageUrl: device.image_url,
-    serialNumber: device.serial_no,
-  };
+  return device;
 };

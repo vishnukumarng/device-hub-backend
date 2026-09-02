@@ -30,7 +30,7 @@ enum CheckoutType {
 
 enum CheckoutStatus {
   ACTIVE
-  COMPLETED
+  RETURNED
   CANCELLED
   AUTO_RELEASED
 }

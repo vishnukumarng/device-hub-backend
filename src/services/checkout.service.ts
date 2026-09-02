@@ -56,7 +56,10 @@ export const checkoutDevice = async (email: string, dto: CreateCheckoutDTO) => {
   try {
     await fulfillWaitlist(dto.deviceId, user.id);
   } catch (error) {
-    console.error("Failed to fulfill user waitlist entry upon checkout:", error);
+    console.error(
+      "Failed to fulfill user waitlist entry upon checkout:",
+      error,
+    );
   }
 
   return checkout;
@@ -120,7 +123,9 @@ export const reserveDevice = async (
   }
 
   if (device.status !== DeviceStatus.AVAILABLE) {
-    throw new ConflictError(`Device is currently ${device.status.toLowerCase()}`);
+    throw new ConflictError(
+      `Device is currently ${device.status.toLowerCase()}`,
+    );
   }
 
   const startTime = new Date(startTimeStr);
@@ -147,7 +152,9 @@ export const reserveDevice = async (
   );
 
   if (!reservation) {
-    throw new ConflictError("Device was reserved by another request; please try again");
+    throw new ConflictError(
+      "Device was reserved by another request; please try again",
+    );
   }
 
   return reservation;
@@ -165,7 +172,9 @@ export const cancelReservation = async (email: string, checkoutId: string) => {
   }
 
   if (checkout.userId !== user.id) {
-    throw new UnauthorizedError("You do not have permission to cancel this reservation");
+    throw new UnauthorizedError(
+      "You do not have permission to cancel this reservation",
+    );
   }
 
   if (checkout.type !== CheckoutType.RESERVATION) {
@@ -196,7 +205,9 @@ export const claimReservation = async (
   }
 
   if (checkout.userId !== user.id) {
-    throw new UnauthorizedError("You do not have permission to claim this reservation");
+    throw new UnauthorizedError(
+      "You do not have permission to claim this reservation",
+    );
   }
 
   if (checkout.type !== CheckoutType.RESERVATION) {
@@ -224,3 +235,10 @@ export const claimReservation = async (
   return result[1]; // Return the created Checkout record
 };
 
+export const returnHistory = async (email: string) => {
+  const user = await userRepository.findByEmail(email);
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+  return checkoutRepository.findById(user.id);
+};
