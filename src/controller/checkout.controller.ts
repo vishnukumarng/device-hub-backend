@@ -206,6 +206,9 @@ export const getMyReturnList = async (
 ) => {
   try {
     const email = req.user?.email;
+    if (!email) {
+      throw new BadRequestError("User authentication details missing");
+    }
 
     const returnList = await checkoutService.returnHistory(email);
 
