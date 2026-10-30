@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.route";
 import deviceRoutes from "./routes/device.route";
 import checkoutRoutes from "./routes/checkout.route";
 import waitingRoutes from "./routes/waitlist.route";
+import adminRoutes from "./routes/admin.route";
 import { errorHandler } from "./middlewares/error.middleware";
 
 const app = express();
@@ -20,6 +21,8 @@ app.use("/auth", authRoutes);
 app.use("/device", deviceRoutes);
 app.use("/checkout", checkoutRoutes);
 app.use("/reservation", waitingRoutes);
+app.use("/admin", adminRoutes);
+
 
 // Base Route
 app.get("/", (req, res) => {

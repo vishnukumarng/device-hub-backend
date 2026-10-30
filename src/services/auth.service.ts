@@ -55,7 +55,10 @@ export const login = async (email: string, password: string) => {
   );
 
   return {
+    id: existingUser.id,
     name: existingUser.name,
+    email: existingUser.email,
+    role: existingUser.role,
     token,
   };
 };
@@ -68,8 +71,11 @@ export const userdetail = async (email: string) => {
   }
 
   return {
+    id: existingUser.id,
     name: existingUser.name,
     email: existingUser.email,
+    role: existingUser.role,
     createdAt: existingUser.createdAt,
   };
 };
+
